@@ -1,0 +1,80 @@
+{ "mappings": {
+        "properties": {
+            "account_created_at": {
+                "type": "date"
+            },
+            "account_lang": {
+                "type": "text"
+            },
+            "created_at": {
+                "type": "date"
+            },
+            "description": {
+                "type": "text"
+            },
+            "favorite_count": {
+                "type": "integer"
+            },
+            "favourites_count": {
+                "type": "integer"
+            },
+            "followers_count": {
+                "type": "integer"
+            },
+            "hashtags": {
+                "type": "text"
+            },
+            "lang": {
+                "type": "text"
+            },
+            "lat": {
+                "type": "integer"
+            },
+            "lng": {
+                "type": "integer"
+            },
+            "location": {
+                "type": "text"
+            },
+            "name": {
+                "type": "text"
+            },
+            "protected": {
+                "type": "boolean"
+            },
+            "quote_count": {
+                "type": "integer"
+            },
+            "reply_count": {
+                "type": "integer"
+            },
+            "reply_to_status_id": {
+                "type": "long"
+            },
+            "reply_to_user_id": {
+                "type": "long"
+            },
+            "retweet_count": {
+                "type": "integer"
+            },
+            "screen_name": {
+                "type": "text"
+            },
+            "source": {
+                "type": "text"
+            },
+            "status_id": {
+                "type": "long"
+            },
+            "text": {
+                "type": "text"
+            },
+            "user_id": {
+                "type": "long"
+            },
+            "verified": {
+                "type": "boolean"
+            }
+        }
+    }
+}
