@@ -9,53 +9,41 @@ import time
 
 
 # using dictreader
+# fixed bug where verified and protected true/false not being cast correctly
 def document_stream(file_to_index, index_name):
-
     with gzip.open(file_to_index, "rt", newline="") as csvfile:
-
+        
         for row in csv.DictReader(csvfile):
 
-            for fld in ["verified", "protected"]:
-                row[fld] = row[fld] == "True"  # these are both either 'True' or 'False'
-
-            for fld in [
-                "favorite_count",
-                "favourites_count",
-                "followers_count",
-                "quote_count",
-                "reply_count",
-                "reply_to_status_id",
-                "reply_to_user_id",
-                "retweet_count",
-                "status_id",
-                "user_id",
-            ]:
+            for fld in ['verified', 'protected']:
+                row[fld] = (row[fld] == 'TRUE') # these are both either 'True' or 'False'
+                                                                
+            for fld in ['favorite_count', 'favourites_count', 'followers_count', 'quote_count', 'reply_count', 'reply_to_status_id', 'reply_to_user_id', 'retweet_count', 'status_id', 'user_id']:
                 row[fld] = try_int(row[fld])
-
+            
             for k in row:
-                if row[k] == "NA":
+                if row[k] == 'NA': 
                     row[k] = None
-
-            status_id = row["status_id"]
+            
+            status_id = row['status_id']
             # delete status_id k:v so it doesn't persist in the output of the generator
-            del row["status_id"]
+            del row['status_id']
+                                                                
 
-            yield {
-                "_index": index_name,
-                # "_type": type_name,
-                "_id": status_id,
-                "_source": json.dumps(row),
-            }
-
-
+            yield {"_index": index_name,
+                    #"_type": type_name,
+                    "_id" : status_id,
+                    "_source": json.dumps(row),
+                    }
+            
+            
 def try_int(s):
-    try:
+    try: 
         int(s)
         return int(s)
     except ValueError:
         return s
-
-
+                
 if __name__ == "__main__":
 
     es = Elasticsearch([{"host": "localhost", "port": 9200}])
@@ -78,10 +66,11 @@ if __name__ == "__main__":
         for success, info in helpers.parallel_bulk(
             es,
             actions=document_stream(os.path.join(dir_to_insert, f), index_name),
-            chunk_size=1000,
-            request_timeout=30,
-            max_retries=10,
-            retry_on_timeout=True,
+            chunk_size=1000, 
+            thread_count=6, 
+            # queue_size=8,
+            request_timeout=60,
+
         ):
             if not success:
                 print("A document failed:", info)
