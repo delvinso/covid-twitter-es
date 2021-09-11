@@ -3,9 +3,44 @@
        "index":{
           "number_of_shards":5,
           "number_of_replicas":1
+       },
+       "index.max_ngram_diff":10,
+       "analysis":{
+          "analyzer":{
+             "ngram_analyzer":{
+                "tokenizer":"ngram_tokenizer",
+                "filter":[
+                   "lowercase"
+                ]
+             }
+          },
+          "tokenizer":{
+             "ngram_tokenizer":{
+                "type":"ngram",
+                "min_gram":3,
+                "max_gram":6,
+                "token_chars":[
+                   "letter",
+                   "digit"
+                ]
+             }
+          }
        }
-   },
+    },
     "mappings":{
+       "dynamic":"true",
+       "dynamic_templates":[
+          {
+             "anything":{
+                "match":"*",
+                "mapping":{
+                   "index":true,
+                   "type":"text",
+                   "analyzer":"ngram_analyzer"
+                }
+             }
+          }
+       ],
        "properties":{
           "account_created_at":{
              "type":"date"
@@ -17,7 +52,8 @@
              "type":"date"
           },
           "description":{
-             "type":"wildcard"
+             "type":"text",
+             "analyzer":"ngram_analyzer"
           },
           "favorite_count":{
              "type":"integer"
@@ -29,7 +65,8 @@
              "type":"integer"
           },
           "hashtags":{
-            "type":"wildcard"
+             "type":"text",
+             "analyzer":"ngram_analyzer"
           },
           "lang":{
              "type":"text"
@@ -41,10 +78,12 @@
              "type":"integer"
           },
           "location":{
-            "type":"wildcard"
+             "type":"text",
+             "analyzer":"ngram_analyzer"
           },
           "name":{
-            "type":"wildcard"
+             "type":"text",
+             "analyzer":"ngram_analyzer"
           },
           "protected":{
              "type":"boolean"
@@ -65,16 +104,17 @@
              "type":"integer"
           },
           "screen_name":{
-            "type":"wildcard"
+             "type":"text"
           },
           "source":{
-            "type":"text"
+             "type":"text"
           },
           "status_id":{
              "type":"long"
           },
           "text":{
-            "type":"wildcard"
+             "type":"text",
+             "analyzer":"ngram_analyzer"
           },
           "user_id":{
              "type":"long"

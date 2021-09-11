@@ -8,6 +8,18 @@ from glob import glob
 import time
 
 
+# from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+# import re
+# def clean_text(text):
+#   text = re.sub(r"[\s]+", " ", text)
+#   text = re.sub(r"http\S+", "", text)
+#   text = re.sub(r" +", " ", text)
+#   text = text.strip()
+#   return text
+
+# analyzer = SentimentIntensityAnalyzer()
+
+
 # using dictreader
 # fixed bug where verified and protected true/false not being cast correctly
 def document_stream(file_to_index, index_name):
@@ -28,7 +40,9 @@ def document_stream(file_to_index, index_name):
             status_id = row['status_id']
             # delete status_id k:v so it doesn't persist in the output of the generator
             del row['status_id']
-                                                                
+                                     
+                
+#             text = clean_text(row['text'])
 
             yield {"_index": index_name,
                     #"_type": type_name,
@@ -66,7 +80,7 @@ if __name__ == "__main__":
         for success, info in helpers.parallel_bulk(
             es,
             actions=document_stream(os.path.join(dir_to_insert, f), index_name),
-            chunk_size=1000, 
+            chunk_size=5000, 
             thread_count=6, 
             # queue_size=8,
             request_timeout=60,
