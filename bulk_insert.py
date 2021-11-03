@@ -63,8 +63,8 @@ if __name__ == "__main__":
     es = Elasticsearch([{"host": "localhost", "port": 9200}])
     index_name = "twitter"
     json_file_path = "./mappings.json"
-    dir_to_insert = "/mnt/e/twitter/clean_en/*csv.gz"
-
+    root_dir_clean = "/mnt/e/twitter/clean_en"
+    dir_to_insert = os.path.join(root_dir_clean, "*csv.gz")
     with open(json_file_path, "r") as j:
         mapping = json.loads(j.read())
 
@@ -90,13 +90,13 @@ if __name__ == "__main__":
                 print("A document failed:", info)
 
         shutil.move(
-            f, os.path.join("/mnt/e/twitter/clean_en/inserted", os.path.basename(f))
+            f, os.path.join(root_dir_clean, "inserted", os.path.basename(f))
         )
         print(
             "Done moving {} to {}".format(
-                f, os.path.join("/mnt/e/twitter/clean_en/inserted", os.path.basename(f))
+                f, os.path.join(root_dir_clean, "inserted", os.path.basename(f))
             )
         )
 
     end_time = time.time()
-    print("Done in {}s".format((end_time - start_time) / 60))
+    print("Done in {} minutes".format((end_time - start_time) / 60))
